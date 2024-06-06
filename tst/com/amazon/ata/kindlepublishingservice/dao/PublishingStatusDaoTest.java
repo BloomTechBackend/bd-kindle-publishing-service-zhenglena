@@ -2,7 +2,6 @@ package com.amazon.ata.kindlepublishingservice.dao;
 
 import com.amazon.ata.kindlepublishingservice.dynamodb.models.PublishingStatusItem;
 import com.amazon.ata.kindlepublishingservice.enums.PublishingRecordStatus;
-import com.amazon.ata.kindlepublishingservice.dynamodb.models.CatalogItemVersion;
 import com.amazon.ata.kindlepublishingservice.exceptions.PublishingStatusNotFoundException;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
@@ -32,6 +31,9 @@ public class PublishingStatusDaoTest {
 
     @Mock
     private DynamoDBMapper dynamoDbMapper;
+
+    @Mock
+    private PaginatedQueryList<PublishingStatusItem> list;
 
     @InjectMocks
     private PublishingStatusDao publishingStatusDao;
@@ -101,5 +103,17 @@ public class PublishingStatusDaoTest {
                 "included in the status message as 'Additional Notes'");
         assertTrue(status.getStatusMessage().contains("Failed due to..."), "If a message is provided it should be" +
                 "included in the status message.");
+    }
+
+    @Test
+    public void getPublishingStatusItems_nonExistentId_throwsException() {
+        //GIVEN
+        String fakeId = "FAKE";
+        when(dynamoDbMapper.query(eq(PublishingStatusItem.class), any(DynamoDBQueryExpression.class))).thenReturn(list);
+        when(list.isEmpty()).thenReturn(true);
+        //WHEN
+        //THEN
+        assertThrows(PublishingStatusNotFoundException.class, () -> publishingStatusDao.getPublishingStatusItems(fakeId),
+                "Expected PublishingStatusNotFoundException to be thrown");
     }
 }

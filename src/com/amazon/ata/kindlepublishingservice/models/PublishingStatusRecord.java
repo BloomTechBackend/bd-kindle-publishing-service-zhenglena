@@ -42,9 +42,18 @@ public class PublishingStatusRecord {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PublishingStatusRecord that = (PublishingStatusRecord) o;
-        return status == that.status &&
+        return Objects.equals(status, that.status) &&
                 Objects.equals(statusMessage, that.statusMessage) &&
                 Objects.equals(bookId, that.bookId);
+    }
+
+    @Override
+    public String toString() {
+        return "PublishingStatusRecord{" +
+                "status='" + status + '\'' +
+                ", statusMessage='" + statusMessage + '\'' +
+                ", bookId='" + bookId + '\'' +
+                '}';
     }
 
     @Override
