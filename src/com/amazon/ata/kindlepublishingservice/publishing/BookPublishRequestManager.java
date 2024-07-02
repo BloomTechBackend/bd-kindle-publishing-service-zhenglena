@@ -1,18 +1,20 @@
 package com.amazon.ata.kindlepublishingservice.publishing;
 
-import dagger.Module;
 import dagger.Provides;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
+@Singleton
 public class BookPublishRequestManager {
-    private Queue<BookPublishRequest> requestQueue;
+    private final Queue<BookPublishRequest> requestQueue;
 
     @Inject
     public BookPublishRequestManager() {
-        requestQueue = new LinkedList<>();
+        requestQueue = new ConcurrentLinkedQueue<>();
     }
 
     /**

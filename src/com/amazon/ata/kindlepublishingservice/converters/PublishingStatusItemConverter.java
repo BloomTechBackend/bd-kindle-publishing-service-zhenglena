@@ -12,7 +12,7 @@ public class PublishingStatusItemConverter {
     /**
      * Converts a list of {@link PublishingStatusItem} to a list of {@link PublishingStatusRecord}. If bookId is null,
      * it will return a PublishingStatusRecord without a bookId.
-     * @param publishingStatusItem the item to be converted
+     * @param publishingStatusItems the item to be converted
      * @return the built PublishingStatusRecord
      */
     public static List<PublishingStatusRecord> toPublishingStatusRecord(List<PublishingStatusItem> publishingStatusItems) {

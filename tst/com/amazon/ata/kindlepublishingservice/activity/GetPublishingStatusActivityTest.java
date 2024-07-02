@@ -120,7 +120,7 @@ public class GetPublishingStatusActivityTest {
         assertEquals(statusItems.size(), recordList.size(),
                 "Expected size of PublishingStatusRecord list to be equal to PublishingStatusItem list");
         assertNull(recordList.get(0).getBookId(), "Expected bookId to be null");
-        assertNull(recordList.get(0).getBookId(), "Expected bookId to be null");
+        assertNull(recordList.get(1).getBookId(), "Expected bookId to be null");
         assertNotNull(recordList.get(2).getBookId(), "Expected bookId to be present once status is SUCCESSFUL.");
     }
 

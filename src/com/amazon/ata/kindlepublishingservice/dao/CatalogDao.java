@@ -73,4 +73,53 @@ public class CatalogDao {
             throw new BookNotFoundException(String.format("No book found for id: %s", bookId));
         }
     }
+
+    /**
+     * Adds the new book to the CatalogItemVersionTable.
+     * If the request is updating an existing book, set previous active version of book to false
+     * and then increment the version by 1.
+     * <p></p>
+     * If the request is a previously existing book but is set to inactive, then return BookNotFoundException.
+     * <p></p>
+     * If the request does not exist in the CatalogItemVersionTable, then add the book to the table with version set as 1.
+     * @param kindleFormattedBook the book to be added to the CatalogItemVersion table
+     * @return the book added
+     */
+    public CatalogItemVersion createOrUpdateBook(KindleFormattedBook kindleFormattedBook) {
+        String bookId = kindleFormattedBook.getBookId();
+        CatalogItemVersion newCatalogItem = new CatalogItemVersion();
+
+        if (bookId == null) {
+            newCatalogItem.setBookId(KindlePublishingUtils.generateBookId());
+            newCatalogItem.setTitle(kindleFormattedBook.getTitle());
+            newCatalogItem.setText(kindleFormattedBook.getText());
+            newCatalogItem.setAuthor(kindleFormattedBook.getAuthor());
+            newCatalogItem.setGenre(kindleFormattedBook.getGenre());
+            newCatalogItem.setInactive(false);
+            newCatalogItem.setVersion(1);
+
+            dynamoDbMapper.save(newCatalogItem);
+            return newCatalogItem;
+        }
+
+        //if this throws a BookNotFoundException, it's because the book is inactive
+        CatalogItemVersion catalogItemVersion = getBookFromCatalog(bookId);
+
+        // if this request is updating an existing book, increment the version by 1
+        // previously active version of the book will be marked inactive.
+        catalogItemVersion.setInactive(true);
+
+        newCatalogItem.setBookId(bookId);
+        newCatalogItem.setVersion(catalogItemVersion.getVersion() + 1);
+        newCatalogItem.setInactive(false);
+        newCatalogItem.setText(catalogItemVersion.getText());
+        newCatalogItem.setAuthor(catalogItemVersion.getAuthor());
+        newCatalogItem.setGenre(catalogItemVersion.getGenre());
+        newCatalogItem.setTitle(catalogItemVersion.getTitle());
+
+        dynamoDbMapper.save(catalogItemVersion);
+        dynamoDbMapper.save(newCatalogItem);
+
+        return newCatalogItem;
+    }
 }

@@ -3,6 +3,7 @@ package com.amazon.ata.kindlepublishingservice;
 import com.amazon.ata.kindlepublishingservice.dagger.ATAKindlePublishingServiceManager;
 import com.amazon.ata.kindlepublishingservice.dagger.ApplicationComponent;
 import com.amazon.ata.kindlepublishingservice.dagger.DaggerApplicationComponent;
+import com.amazon.ata.kindlepublishingservice.publishing.BookPublishTask;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
